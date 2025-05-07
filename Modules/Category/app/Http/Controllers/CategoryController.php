@@ -10,9 +10,24 @@ use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::defaultOrder()->get()->toTree();
+        $parentId = $request->query('parent_id');
+
+        if ($request->has('parent_id')) {
+            if (is_null($parentId) || $parentId === 'null') {
+                $categories = Category::whereNull('parent_id')
+                    ->defaultOrder()
+                    ->get();
+            } else {
+                $categories = Category::where('parent_id', $parentId)
+                    ->defaultOrder()
+                    ->get();
+            }
+        } else {
+            $categories = Category::defaultOrder()->get()->toTree();
+        }
+
         return $this->respondOk($categories, 'Categories fetched successfully');
     }
 
@@ -29,8 +44,8 @@ class CategoryController extends Controller
                 ]);
             }
         ])->find($id);
-        
-        if(!$category){
+
+        if (!$category) {
             return $this->respondError(null, 'Category not found');
         }
         return $this->respondOk($category, 'Category fetched successfully');
@@ -56,7 +71,7 @@ class CategoryController extends Controller
             ],
         ]);
 
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = 'Category' . time() . '.' . $image->getClientOriginalExtension();
             $path = $image->storeAs('Category', $imageName, 'public');
@@ -77,11 +92,11 @@ class CategoryController extends Controller
         ]);
 
         $category = Category::find($id);
-        if(!$category){
+        if (!$category) {
             return $this->respondError(null, 'Category not found');
         }
-        
-        if($request->hasFile('image')){
+
+        if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = 'Category' . time() . '.' . $image->getClientOriginalExtension();
             $path = $image->storeAs('Category', $imageName, 'public');
@@ -95,7 +110,7 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $category = Category::find($id);
-        if(!$category){
+        if (!$category) {
             return $this->respondError(null, 'Category not found');
         }
         $category->delete();
@@ -106,12 +121,11 @@ class CategoryController extends Controller
     public function makeRoot($id)
     {
         $category = Category::find($id);
-        if(!$category){
+        if (!$category) {
             return $this->respondError(null, 'Category not found');
         }
         $category->makeRoot();
 
         return $this->respondOk($category, 'Category made root successfully');
     }
-
 }
