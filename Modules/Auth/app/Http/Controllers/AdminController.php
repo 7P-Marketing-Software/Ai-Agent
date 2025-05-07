@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Modules\Auth\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+
 class AdminController extends Controller
 {
     public function destroyUser($id)
@@ -20,7 +21,7 @@ class AdminController extends Controller
     }
 
     public function banUser(Request $request)
-    {   
+    {
         $request->validate([
             'user_id' => 'required:exists:users,id',
             'banned_until' => 'required|date|after:now',
@@ -45,5 +46,11 @@ class AdminController extends Controller
         $user->save();
 
         return $this->respondOk(null, 'User ban removed successfully');
+    }
+
+    public function getAllUsers()
+    {
+        $users = User::paginate();
+        return $this->respondOk($users, 'Users retrieved successfully');
     }
 }

@@ -19,6 +19,7 @@ Route::prefix('auth')->group(function () {
 
 Route::prefix('admin')->middleware(AdminMiddleware::class)->group(function () {
     Route::delete('destroy-user/{id}', [AdminController::class, 'destroyUser']);
+    Route::get('get-all-users', [AdminController::class, 'getAllUsers']);
     Route::post('ban-user', [AdminController::class, 'banUser']);
     Route::post('remove-ban/{id}', [AdminController::class, 'removeBan']);
 });
