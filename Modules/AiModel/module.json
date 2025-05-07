@@ -1,0 +1,11 @@
+{
+    "name": "AiModel",
+    "alias": "aimodel",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\AiModel\\Providers\\AiModelServiceProvider"
+    ],
+    "files": []
+}

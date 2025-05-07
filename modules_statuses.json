@@ -1,0 +1,7 @@
+{
+    "Auth": true,
+    "Category": true,
+    "Question": true,
+    "Answer": true,
+    "AiModel": true
+}

@@ -1,0 +1,11 @@
+{
+    "name": "Answer",
+    "alias": "answer",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Answer\\Providers\\AnswerServiceProvider"
+    ],
+    "files": []
+}
