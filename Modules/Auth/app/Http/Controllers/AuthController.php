@@ -12,12 +12,11 @@ use Modules\Auth\Http\Requests\ForgetUserRequest;
 use Modules\Auth\Http\Requests\ResetUserRequest;
 use Modules\Auth\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
-    public function __construct(private AuthService $authService, private WhatsAppService $whatsAppService)
-    {
-    }
+    public function __construct(private AuthService $authService, private WhatsAppService $whatsAppService) {}
 
     public function register(RegisterRequest $request)
     {
@@ -37,8 +36,13 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $user = $this->authService->logout($request);
-        return $this->respondOk($user, 'User logged out successfully');
+        $user = $request->user();
+        Log::info($user);
+        if (!$user) {
+            return $this->respondNotFound(null, 'User not found');
+        }
+        $this->authService->logout($user);
+        return $this->respondOk(null, 'User logged out successfully');
     }
 
     public function resetPassword(ResetUserRequest $request)
@@ -184,5 +188,4 @@ class AuthController extends Controller
         $user->save();
         return true;
     }
-
 }

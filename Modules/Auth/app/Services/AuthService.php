@@ -51,10 +51,10 @@ class AuthService
 
         $token = $user->createToken('User Access Token')->plainTextToken;
 
-            return [
-                'token' => $token,
-                'user' => $user,
-                'role' => 'user',
+        return [
+            'token' => $token,
+            'user' => $user,
+            'role' => 'user',
         ];
     }
 
@@ -77,8 +77,9 @@ class AuthService
 
     public function logout($user)
     {
-        $user->currentAccessToken()->delete();
-        $user->tokens()->delete();
+        if ($user->currentAccessToken()) {
+            $user->currentAccessToken()->delete();
+        }
     }
 
     public function resetPassword($user, $password)
@@ -90,7 +91,6 @@ class AuthService
         ]);
 
         $user->tokens()->delete();
-
     }
 
     public function createForgetPasswordToken($user)
